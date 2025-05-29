@@ -1,87 +1,92 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Calculadora de Tarifa Vehicular</title>
-    <link rel="stylesheet" href="estilos.css">
+  <meta charset="UTF-8">
+  <title>Calculadora de Tarifa de Transporte</title>
+  <style>
+    body {
+      background-color: #0A1D37;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #102A43;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #1E3A5F;
+      width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #4FC3F7;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+
+    select, input[type="number"], button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border: none;
+      border-radius: 8px;
+    }
+
+    button {
+      background-color: #4FC3F7;
+      color: #0A1D37;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #29B6F6;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Calculadora de Tarifa Vehicular</h2>
-        <form method="post">
-            <label for="destino">Destino del Vehículo:</label>
-            <select name="destino" id="destino" onchange="toggleCampos()">
-                <option value="">-- Seleccione --</option>
-                <option value="urbano" <?= isset($_POST['destino']) && $_POST['destino'] == 'urbano' ? 'selected' : '' ?>>Urbano</option>
-                <option value="metropolitano" <?= isset($_POST['destino']) && $_POST['destino'] == 'metropolitano' ? 'selected' : '' ?>>Metropolitano</option>
-                <option value="nacional" <?= isset($_POST['destino']) && $_POST['destino'] == 'nacional' ? 'selected' : '' ?>>Nacional</option>
-            </select>
+  <div class="container">
+    <h2>Tarifas de Transporte</h2>
+    <form action="calcular.php" method="POST">
+      <label for="destino">Destino del vehículo:</label>
+      <select name="destino" id="destino" required onchange="toggleUrbanoFields(this.value)">
+        <option value="">Seleccione...</option>
+        <option value="urbano">Urbano</option>
+        <option value="metropolitano">Metropolitano</option>
+        <option value="nacional">Nacional</option>
+      </select>
 
-            <div id="urbanoCampos" class="<?= isset($_POST['destino']) && $_POST['destino'] == 'urbano' ? '' : 'oculto' ?>">
-                <label for="peso">Peso de la carga (kg):</label>
-                <input type="number" name="peso" id="peso" min="1" required value="<?= $_POST['peso'] ?? '' ?>">
+      <div id="urbanoFields" style="display:none;">
+        <label for="peso">Peso de la carga (kg):</label>
+        <input type="number" name="peso" id="peso" min="1">
 
-                <label for="zona">Zona:</label>
-                <select name="zona" id="zona">
-                    <option value="0" <?= isset($_POST['zona']) && $_POST['zona'] == '0' ? 'selected' : '' ?>>Zona 0</option>
-                    <option value="1" <?= isset($_POST['zona']) && $_POST['zona'] == '1' ? 'selected' : '' ?>>Zona 1</option>
-                    <option value="2" <?= isset($_POST['zona']) && $_POST['zona'] == '2' ? 'selected' : '' ?>>Zona 2</option>
-                    <option value="3" <?= isset($_POST['zona']) && $_POST['zona'] == '3' ? 'selected' : '' ?>>Zona 3</option>
-                </select>
-            </div>
+        <label for="zona">Zona:</label>
+        <select name="zona" id="zona">
+          <option value="0">Zona 0</option>
+          <option value="1">Zona 1</option>
+          <option value="2">Zona 2</option>
+          <option value="3">Zona 3</option>
+        </select>
+      </div>
 
-            <input type="submit" value="Calcular Tarifa">
-        </form>
+      <button type="submit">Calcular Tarifa</button>
+    </form>
+  </div>
 
-        <?php
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $destino = $_POST["destino"];
-
-            if ($destino === "urbano") {
-                $peso = intval($_POST["peso"]);
-                $zona = $_POST["zona"];
-
-                $tarifas = [
-                    "0" => ["min" => 15122, "extra" => 25],
-                    "1" => ["min" => 23488, "extra" => 30],
-                    "2" => ["min" => 34936, "extra" => 43],
-                    "3" => ["min" => 15122, "extra" => 46],
-                ];
-
-                $base = $tarifas[$zona]["min"];
-                $extra = $tarifas[$zona]["extra"];
-
-                if ($peso <= 750) {
-                    $tarifa = $base;
-                } else {
-                    $tarifa = $base + ($peso - 750) * $extra;
-                }
-
-                echo "<div class='resultado'>";
-                echo "<h3>Resultado</h3>";
-                echo "<p><strong>Destino:</strong> Urbano</p>";
-                echo "<p><strong>Zona:</strong> $zona</p>";
-                echo "<p><strong>Peso:</strong> $peso kg</p>";
-                echo "<p><strong>Tarifa:</strong> $" . number_format($tarifa, 0, ',', '.') . "</p>";
-                echo "</div>";
-            } else {
-                echo "<div class='resultado'>";
-                echo "<h3>Información</h3>";
-                echo "<p>La tarifa para destino <strong>$destino</strong> aún no ha sido implementada.</p>";
-                echo "</div>";
-            }
-        }
-        ?>
-    </div>
-
-    <script>
-        function toggleCampos() {
-            var destino = document.getElementById("destino").value;
-            var urbanoCampos = document.getElementById("urbanoCampos");
-            urbanoCampos.style.display = (destino === "urbano") ? "block" : "none";
-        }
-
-        window.onload = toggleCampos;
-    </script>
+  <script>
+    function toggleUrbanoFields(value) {
+      const urbanoFields = document.getElementById('urbanoFields');
+      urbanoFields.style.display = value === 'urbano' ? 'block' : 'none';
+    }
+  </script>
 </body>
 </html>
