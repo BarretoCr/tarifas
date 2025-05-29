@@ -8,35 +8,71 @@
 <body>
     <div class="container">
         <h2>Calculadora de Tarifa Vehicular</h2>
-        <form action="procesar.php" method="post">
+        <form method="post">
             <label for="destino">Seleccione el destino del vehículo:</label>
             <select name="destino" id="destino" onchange="mostrarCampos(this.value)">
-                <option value="urbano">Urbano</option>
-                <option value="metropolitano">Metropolitano</option>
-                <option value="nacional">Nacional</option>
+                <option value="urbano" <?= isset($_POST['destino']) && $_POST['destino'] == 'urbano' ? 'selected' : '' ?>>Urbano</option>
+                <option value="metropolitano" <?= isset($_POST['destino']) && $_POST['destino'] == 'metropolitano' ? 'selected' : '' ?>>Metropolitano</option>
+                <option value="nacional" <?= isset($_POST['destino']) && $_POST['destino'] == 'nacional' ? 'selected' : '' ?>>Nacional</option>
             </select>
 
             <div id="urbanoCampos">
                 <label for="peso">Peso de la carga (en kg):</label>
-                <input type="number" name="peso" id="peso" required>
+                <input type="number" name="peso" id="peso" value="<?= $_POST['peso'] ?? '' ?>" required>
 
                 <label for="zona">Seleccione la zona:</label>
                 <select name="zona" id="zona">
-                    <option value="0">Zona 0</option>
-                    <option value="1">Zona 1</option>
-                    <option value="2">Zona 2</option>
-                    <option value="3">Zona 3</option>
+                    <option value="0" <?= isset($_POST['zona']) && $_POST['zona'] == '0' ? 'selected' : '' ?>>Zona 0</option>
+                    <option value="1" <?= isset($_POST['zona']) && $_POST['zona'] == '1' ? 'selected' : '' ?>>Zona 1</option>
+                    <option value="2" <?= isset($_POST['zona']) && $_POST['zona'] == '2' ? 'selected' : '' ?>>Zona 2</option>
+                    <option value="3" <?= isset($_POST['zona']) && $_POST['zona'] == '3' ? 'selected' : '' ?>>Zona 3</option>
                 </select>
             </div>
             <input type="submit" value="Calcular Tarifa">
         </form>
+
+        <?php
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $destino = $_POST['destino'];
+
+            if ($destino == "urbano") {
+                $peso = (int)$_POST['peso'];
+                $zona = $_POST['zona'];
+
+                $tarifas = [
+                    "0" => ["minimo" => 15122, "adicional" => 25],
+                    "1" => ["minimo" => 23488, "adicional" => 30],
+                    "2" => ["minimo" => 34936, "adicional" => 43],
+                    "3" => ["minimo" => 15122, "adicional" => 46]
+                ];
+
+                $minimo = $tarifas[$zona]["minimo"];
+                $adicional = $tarifas[$zona]["adicional"];
+
+                $tarifa = ($peso <= 750) ? $minimo : $minimo + (($peso - 750) * $adicional);
+
+                echo "<div class='resultado'>";
+                echo "<h3>Resultado:</h3>";
+                echo "<p><strong>Destino:</strong> Urbano</p>";
+                echo "<p><strong>Zona:</strong> $zona</p>";
+                echo "<p><strong>Peso:</strong> {$peso} kg</p>";
+                echo "<p><strong>Tarifa Calculada:</strong> $" . number_format($tarifa, 0, ',', '.') . "</p>";
+                echo "</div>";
+            } else {
+                echo "<div class='resultado'>";
+                echo "<h3>Atención:</h3>";
+                echo "<p>Los cálculos para el destino <strong>'$destino'</strong> aún no han sido implementados.</p>";
+                echo "</div>";
+            }
+        }
+        ?>
     </div>
 
     <script>
         function mostrarCampos(valor) {
             document.getElementById("urbanoCampos").style.display = (valor === "urbano") ? "block" : "none";
         }
-        window.onload = function() {
+        window.onload = function () {
             mostrarCampos(document.getElementById("destino").value);
         };
     </script>
