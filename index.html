@@ -9,7 +9,7 @@
 <body>
   <div class="container">
     <h1>🚚 Calculadora de Tarifas</h1>
-    
+
     <label for="destino">Selecciona el destino del vehículo:</label>
     <select id="destino" onchange="mostrarFormulario()">
       <option value="">-- Selecciona --</option>
@@ -17,13 +17,13 @@
       <option value="metropolitano">Metropolitano</option>
       <option value="nacional">Nacional</option>
     </select>
-    
+
     <!-- Formulario para destino Urbano -->
     <div id="formularioUrbano" class="formulario oculto">
       <h2>Destino Urbano</h2>
       <label for="peso">Peso de la carga (kg):</label>
       <input type="number" id="peso" min="0" required />
-      
+
       <label for="zona">Selecciona la zona:</label>
       <select id="zona">
         <option value="0">Zona 0</option>
@@ -31,10 +31,10 @@
         <option value="2">Zona 2</option>
         <option value="3">Zona 3</option>
       </select>
-      
+
       <button onclick="calcularTarifaUrbano()">Calcular Tarifa</button>
     </div>
-    
+
     <!-- Formulario para destino Metropolitano -->
     <div id="formularioMetropolitano" class="formulario oculto">
       <h2>Destino Metropolitano</h2>
@@ -55,23 +55,47 @@
         <option value="SAN ANDRES TELLO">SAN ANDRES TELLO</option>
         <option value="SAN ANTONIO">SAN ANTONIO</option>
       </select>
-      
+
       <label for="pesoMetro">Peso de la carga (kg):</label>
       <input type="number" id="pesoMetro" min="0" required>
-      
+
       <button onclick="calcularTarifaMetropolitano()">Calcular Tarifa</button>
     </div>
-    
-    <!-- Mensaje para destinos no implementados -->
-    <div id="mensajeNacional" class="formulario oculto">
-      <h2>🚧 En construcción</h2>
-      <p>El cálculo para el destino <strong>Nacional</strong> aún no está disponible.</p>
+
+    <!-- Formulario para destino Nacional -->
+    <div id="formularioNacional" class="formulario oculto">
+      <h2>Destino Nacional</h2>
+      <label for="nacionalDestino">Selecciona el destino nacional:</label>
+      <select id="nacionalDestino">
+        <option value="">-- Selecciona --</option>
+        <option value="FLORENCIA">FLORENCIA</option>
+        <option value="GARZON">GARZON</option>
+        <option value="LA PLATA">LA PLATA</option>
+        <option value="PITALITO">PITALITO</option>
+        <option value="YAGUARA">YAGUARA</option>
+        <option value="ACEVEDO">ACEVEDO</option>
+        <option value="AGRADO">AGRADO</option>
+        <option value="ALGECIRAS">ALGECIRAS</option>
+        <option value="ALPUJARRA">ALPUJARRA</option>
+      </select>
+
+      <label for="tipoVehiculo">Selecciona la tipología del vehículo:</label>
+      <select id="tipoVehiculo">
+        <option value="1.5">1,5</option>
+        <option value="2">2</option>
+        <option value="3.5">3,5</option>
+        <option value="4.5">4,5</option>
+        <option value="7">7</option>
+        <option value="10">10</option>
+      </select>
+
+      <button onclick="calcularTarifaNacional()">Calcular Tarifa</button>
     </div>
-    
-    <!-- Área para mostrar el resultado -->
+
+    <!-- Resultado -->
     <div id="resultado"></div>
   </div>
-  
+
   <script src="app.js"></script>
 </body>
 </html>
