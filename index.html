@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora de Tarifa Vehicular</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Calculadora de Tarifa Vehicular</h2>
+        <form action="procesar.php" method="post">
+            <label for="destino">Seleccione el destino del vehículo:</label>
+            <select name="destino" id="destino" onchange="mostrarCampos(this.value)">
+                <option value="urbano">Urbano</option>
+                <option value="metropolitano">Metropolitano</option>
+                <option value="nacional">Nacional</option>
+            </select>
+
+            <div id="urbanoCampos">
+                <label for="peso">Peso de la carga (en kg):</label>
+                <input type="number" name="peso" id="peso" required>
+
+                <label for="zona">Seleccione la zona:</label>
+                <select name="zona" id="zona">
+                    <option value="0">Zona 0</option>
+                    <option value="1">Zona 1</option>
+                    <option value="2">Zona 2</option>
+                    <option value="3">Zona 3</option>
+                </select>
+            </div>
+            <input type="submit" value="Calcular Tarifa">
+        </form>
+    </div>
+
+    <script>
+        function mostrarCampos(valor) {
+            document.getElementById("urbanoCampos").style.display = (valor === "urbano") ? "block" : "none";
+        }
+        window.onload = function() {
+            mostrarCampos(document.getElementById("destino").value);
+        };
+    </script>
+</body>
+</html>
