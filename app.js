@@ -1,27 +1,24 @@
-// Función para mostrar el formulario según el destino seleccionado
 function mostrarFormulario() {
   const destino = document.getElementById("destino").value;
   const formularioUrbano = document.getElementById("formularioUrbano");
   const formularioMetro = document.getElementById("formularioMetropolitano");
-  const mensajeNacional = document.getElementById("mensajeNacional");
+  const formularioNacional = document.getElementById("formularioNacional");
   const resultado = document.getElementById("resultado");
-  
-  // Se ocultan todos los formularios/mensajes
+
   formularioUrbano.classList.add("oculto");
   formularioMetro.classList.add("oculto");
-  mensajeNacional.classList.add("oculto");
+  formularioNacional.classList.add("oculto");
   resultado.innerHTML = "";
-  
+
   if (destino === "urbano") {
     formularioUrbano.classList.remove("oculto");
   } else if (destino === "metropolitano") {
     formularioMetro.classList.remove("oculto");
   } else if (destino === "nacional") {
-    mensajeNacional.classList.remove("oculto");
+    formularioNacional.classList.remove("oculto");
   }
 }
 
-// Cálculo para destinos urbanos
 function calcularTarifaUrbano() {
   const peso = parseFloat(document.getElementById("peso").value);
   const zona = parseInt(document.getElementById("zona").value);
@@ -65,7 +62,6 @@ function calcularTarifaUrbano() {
   resultado.innerHTML = `✅ Tarifa Urbana: $${total.toFixed(0)}`;
 }
 
-// Cálculo para destinos metropolitanos
 function calcularTarifaMetropolitano() {
   const destinoMetro = document.getElementById("metroDestino").value;
   const pesoMetro = parseFloat(document.getElementById("pesoMetro").value);
@@ -76,7 +72,6 @@ function calcularTarifaMetropolitano() {
     return;
   }
 
-  // Tabla de tarifas para destinos metropolitanos
   const tarifasMetro = {
     "CAMPOALEGRE": { base: 96837, adicional: 51 },
     "PALERMO": { base: 75344, adicional: 51 },
@@ -101,10 +96,83 @@ function calcularTarifaMetropolitano() {
 
   const tarifa = tarifasMetro[destinoMetro];
   let total = tarifa.base;
-  
+
   if (pesoMetro > 1000) {
     total += (pesoMetro - 1000) * tarifa.adicional;
   }
-  
+
   resultado.innerHTML = `✅ Tarifa Metropolitano para ${destinoMetro}: $${total.toFixed(0)}`;
+}
+
+function calcularTarifaNacional() {
+  const destino = document.getElementById("nacionalDestino").value;
+  const tipoVehiculo = document.getElementById("tipoVehiculo").value;
+  const resultado = document.getElementById("resultado");
+
+  const tarifasNacional = {
+    "FLORENCIA": {
+      "1.5": 718599,
+      "2": 737426,
+      "3.5": 793907,
+      "4.5": 831562,
+      "7": 526180
+    },
+    "GARZON": {
+      "2": 492623,
+      "3.5": 307137,
+      "4.5": 400405
+    },
+    "LA PLATA": {
+      "1.5": 539915,
+      "2": 304136,
+      "3.5": 449473,
+      "4.5": 598815
+    },
+    "PITALITO": {
+      "1.5": 377249,
+      "2": 377249,
+      "3.5": 622326,
+      "4.5": 669655
+    },
+    "YAGUARA": {
+      "1.5": 116910,
+      "2": 151106,
+      "3.5": 253698,
+      "4.5": 322091
+    },
+    "ACEVEDO": {
+      "1.5": 336771,
+      "2": 392023,
+      "3.5": 557782,
+      "4.5": 668288,
+      "10": 1236768
+    },
+    "AGRADO": {
+      "1.5": 255399,
+      "2": 302199,
+      "3.5": 442607,
+      "4.5": 536213
+    },
+    "ALGECIRAS": {
+      "1.5": 118991,
+      "2": 151495,
+      "3.5": 248999,
+      "4.5": 314002,
+      "7": 497996
+    },
+    "ALPUJARRA": {
+      "1.5": 263843,
+      "2": 278144,
+      "3.5": 321046
+      // Puedes seguir agregando más si lo deseas
+    }
+  };
+
+  if (!tarifasNacional[destino] || !tarifasNacional[destino][tipoVehiculo]) {
+    resultado.innerHTML = "❗ Combinación de destino y tipo de vehículo no válida.";
+    return;
+  }
+
+  const tarifa = tarifasNacional[destino][tipoVehiculo];
+  resultado.innerHTML = `✅ Tarifa Nacional para ${destino} con vehículo tipo ${tipoVehiculo}: $${tarifa.toLocaleString()}`;
 }
