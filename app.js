@@ -46,7 +46,7 @@ function calcularTarifaUrbano() {
       adicional = 43;
       break;
     case 3:
-      tarifaBase = 15122;
+      tarifaBase = 41544;
       adicional = 46;
       break;
     default:
